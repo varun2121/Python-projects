@@ -1,0 +1,21 @@
+import subprocess
+import random
+
+def get_random_mac():
+    # Generate a random MAC address
+    # The first octet of a MAC address must be even
+    first_octet = random.randint(0, 127) * 2
+    mac = [first_octet] + [random.randint(0, 255) for _ in range(5)]
+    return ':'.join(map(lambda x: format(x, '02x'), mac))
+
+def change_mac(interface, new_mac):
+    # Change MAC address of the given interface
+    print(f"Changing MAC address of {interface} to {new_mac}")
+    subprocess.call(["sudo", "ifconfig", interface, "ether", new_mac])
+    subprocess.call(["sudo", "ifconfig", interface, "up"])
+
+# Example usage
+if __name__ == "__main__":
+    interface = "en0"  # Replace with your network interface (e.g., eth0, wlan0)
+    new_mac = get_random_mac()
+    change_mac(interface, new_mac)
