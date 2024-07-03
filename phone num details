@@ -1,0 +1,40 @@
+import phonenumbers
+from phonenumbers import geocoder, carrier, timezone
+
+def get_phone_number_info(phone_number):
+    try:
+        parsed_number = phonenumbers.parse(phone_number, None)
+        
+        # Get country of the phone number
+        country = geocoder.description_for_number(parsed_number, "en")
+        
+        # Get carrier of the phone number
+        carrier_name = carrier.name_for_number(parsed_number, "en")
+        
+        # Get timezone information of the phone number
+        time_zone = timezone.time_zones_for_number(parsed_number)
+        
+        # Get validity of phone number
+        is_valid = phonenumbers.is_valid_number(parsed_number)
+        
+        return {
+            "country": country,
+            "carrier": carrier_name,
+            "time_zone": time_zone,
+            "is_valid": is_valid
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+if __name__ == "__main__":
+    phone_number = "+1234567890"  # Replace with the phone number you want to lookup
+    
+    result = get_phone_number_info(phone_number)
+    
+    if "error" in result:
+        print("Error:", result["error"])
+    else:
+        print("Country:", result["country"])
+        print("Carrier:", result["carrier"])
+        print("Timezone:", result["time_zone"])
+        print("Valid:", result["is_valid"])
