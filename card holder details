@@ -1,0 +1,88 @@
+class Card:
+    def __init__(self, card_number, card_holder, expiry_date, cvv, balance=0):
+        self.card_number = card_number
+        self.card_holder = card_holder
+        self.expiry_date = expiry_date
+        self.cvv = cvv
+        self.balance = balance
+    
+    def display_card_info(self):
+        print(f"Card Number: {self.card_number}")
+        print(f"Card Holder: {self.card_holder}")
+        print(f"Expiry Date: {self.expiry_date}")
+        print(f"CVV: {self.cvv}")
+        print(f"Balance: ${self.balance:.2f}")
+
+class Wallet:
+    def __init__(self):
+        self.cards = []
+
+    def add_card(self, card):
+        self.cards.append(card)
+        print("Card added successfully.")
+
+    def remove_card(self, card_number):
+        for card in self.cards:
+            if card.card_number == card_number:
+                self.cards.remove(card)
+                print("Card removed successfully.")
+                return
+        print("Card not found in wallet.")
+
+    def display_cards(self):
+        if not self.cards:
+            print("No cards in the wallet.")
+        else:
+            print("Cards in the wallet:")
+            for card in self.cards:
+                card.display_card_info()
+                print("--------------------")
+
+    def get_total_balance(self):
+        total_balance = 0
+        for card in self.cards:
+            total_balance += card.balance
+        return total_balance
+
+    def make_payment(self, card_number, amount):
+        for card in self.cards:
+            if card.card_number == card_number:
+                if card.balance >= amount:
+                    card.balance -= amount
+                    print(f"Payment of ${amount:.2f} successful.")
+                else:
+                    print("Insufficient balance.")
+                return
+        print("Card not found or payment unsuccessful.")
+
+
+# Example usage:
+
+# Create a wallet
+my_wallet = Wallet()
+
+# Add cards to the wallet
+card1 = Card("1234567890123456", "John Doe", "12/25", "123", balance=1000.00)
+card2 = Card("9876543210987654", "Jane Smith", "10/24", "456", balance=500.50)
+
+my_wallet.add_card(card1)
+my_wallet.add_card(card2)
+
+# Display cards in the wallet
+my_wallet.display_cards()
+
+# Remove a card from the wallet
+my_wallet.remove_card("9876543210987654")
+
+# Display updated cards in the wallet
+my_wallet.display_cards()
+
+# Make a payment using one of the cards
+my_wallet.make_payment("1234567890123456", 200.75)
+
+# Display updated balance of the cards
+my_wallet.display_cards()
+
+# Get total balance of all cards in the wallet
+total_balance = my_wallet.get_total_balance()
+print(f"Total balance in wallet: ${total_balance:.2f}")
