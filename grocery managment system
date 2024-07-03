@@ -1,0 +1,116 @@
+# Grocery Store Management System
+
+class Product:
+    def __init__(self, id, name, price, quantity):
+        self.id = id
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+
+    def display_product(self):
+        print(f"Product ID: {self.id}")
+        print(f"Name: {self.name}")
+        print(f"Price: ${self.price}")
+        print(f"Quantity available: {self.quantity}")
+
+class Inventory:
+    def __init__(self):
+        self.products = {}
+
+    def add_product(self, product):
+        self.products[product.id] = product
+
+    def display_inventory(self):
+        print("Current Inventory:")
+        for product_id, product in self.products.items():
+            product.display_product()
+            print("--------------------")
+
+    def search_product(self, product_id):
+        if product_id in self.products:
+            return self.products[product_id]
+        else:
+            return None
+
+    def update_product_quantity(self, product_id, quantity):
+        if product_id in self.products:
+            self.products[product_id].quantity += quantity
+        else:
+            print("Product not found in inventory.")
+
+class ShoppingCart:
+    def __init__(self):
+        self.items = {}
+
+    def add_item(self, product, quantity):
+        if product.id in self.items:
+            self.items[product.id]["quantity"] += quantity
+        else:
+            self.items[product.id] = {"product": product, "quantity": quantity}
+
+    def remove_item(self, product_id, quantity):
+        if product_id in self.items:
+            if quantity >= self.items[product_id]["quantity"]:
+                del self.items[product_id]
+            else:
+                self.items[product_id]["quantity"] -= quantity
+
+    def display_cart(self):
+        print("Shopping Cart:")
+        total_cost = 0
+        for item in self.items.values():
+            product = item["product"]
+            quantity = item["quantity"]
+            total_cost += product.price * quantity
+            print(f"Product: {product.name}, Quantity: {quantity}, Price: ${product.price}")
+        print(f"Total Cost: ${total_cost}")
+
+class Customer:
+    def __init__(self, name):
+        self.name = name
+        self.shopping_cart = ShoppingCart()
+
+    def add_to_cart(self, product, quantity):
+        self.shopping_cart.add_item(product, quantity)
+
+    def remove_from_cart(self, product_id, quantity):
+        self.shopping_cart.remove_item(product_id, quantity)
+
+    def checkout(self):
+        self.shopping_cart.display_cart()
+
+# Example usage:
+
+# Create inventory
+inventory = Inventory()
+
+# Add products to inventory
+product1 = Product(1, "Apple", 1.00, 50)
+product2 = Product(2, "Banana", 0.50, 100)
+inventory.add_product(product1)
+inventory.add_product(product2)
+
+# Display current inventory
+inventory.display_inventory()
+
+# Create a customer
+customer = Customer("Alice")
+
+# Customer adds products to their cart
+customer.add_to_cart(product1, 5)
+customer.add_to_cart(product2, 10)
+
+# Display customer's cart
+customer.shopping_cart.display_cart()
+
+# Customer removes a product from cart
+customer.remove_from_cart(2, 3)
+
+# Display updated cart
+customer.shopping_cart.display_cart()
+
+# Example of updating inventory after purchase
+inventory.update_product_quantity(1, -5)
+
+# Display updated inventory
+inventory.display_inventory()
